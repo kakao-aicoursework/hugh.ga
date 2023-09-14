@@ -1,0 +1,10 @@
+
+pynecone.db
+
+__pycache__/
+
+*.py[cod]
+
+.web
+
+openai_api_key.txt

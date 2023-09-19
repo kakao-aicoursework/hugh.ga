@@ -1,0 +1,6 @@
+
+__pycache__/
+pynecone.db
+*.py[cod]
+.web
+open_api_key.txt

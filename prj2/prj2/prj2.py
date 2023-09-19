@@ -12,8 +12,9 @@ from langchain.document_loaders import TextLoader
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import Chroma
-from langchain.chains import RetrievalQA
+from langchain.chains import RetrievalQA, LLMChain
 from langchain.chat_models import ChatOpenAI
+from langchain.prompts.chat import ChatPromptTemplate, SystemMessage, HumanMessagePromptTemplate
 
 
 openai.api_key = open('./prj2/openai_api_key.txt', 'r').read().strip()
@@ -22,6 +23,9 @@ os.environ['OPENAI_API_KEY'] = openai.api_key
 
 DATA_PATH = './prj2/data.txt'
 ROLE = 'You are a chatbot which can describe kakao API.'
+PROMPT = '''
+    Answer "{query}" based on following: \n --- \n {data}.
+'''
 
 
 def load_data() -> None:
@@ -34,23 +38,29 @@ def load_data() -> None:
     return qa
 
 
+def func(query: str):
+    # load data
+    data = open(DATA_PATH).read()
+
+    # make chain
+    llm = ChatOpenAI(temperature=0)
+    llm_chain = LLMChain(
+        llm=llm,
+        prompt=ChatPromptTemplate.from_messages([
+            SystemMessage(content=ROLE),
+            HumanMessagePromptTemplate.from_template(PROMPT),
+        ]),
+        output_key="answer",
+        verbose=True,
+    )
+
+    # put query and data
+    ret = llm_chain({'query': query, 'data': data})
+    return ret.get('answer', 'Nothing to say.')
+
+
 def query_db(query: str, qa) -> str:
     return qa.run(query)
-
-
-def text_to_chatgpt(text: str) -> str:
-    messages = [
-        {"role": "system", "content": ROLE},
-        {"role": "user", "content": text}
-    ]
-
-    # API 호출
-    response = openai.ChatCompletion.create(model="gpt-3.5-turbo",
-                                            messages=messages,
-                                            max_tokens=2048)
-    answer = response['choices'][0]['message']['content']
-    # Return
-    return answer
 
 
 class Message(Base):
@@ -71,7 +81,8 @@ class State(pc.State):
     def output(self) -> str:
         if not self.text.strip():
             return "Answer will appear here."
-        return query_db(self.text, qa)
+        # return query_db(self.text, qa)
+        return func(self.text)
 
     def post(self):
         self.messages = [

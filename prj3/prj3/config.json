@@ -1,0 +1,23 @@
+{
+    "role": "You are a chatbot and your name is '챗봇서비스'.",
+    "router_info": {
+        "chains": {
+            "chatbot" : {
+                "name": "chatbot",
+                "description": "Good for answering questions about kakao services(kakao sync, kakao social, kakao channel).",
+                "prompt_template_path": "./templates/chatbot_prompt.txt"
+            },
+            "search": {
+                "name": "search",
+                "description": "Good for answering questions by web searching.",
+                "prompt_template_path": "./templates/search_prompt.txt"
+            },
+            "default": {
+                "name": "default",
+                "description": "Good for general conversation.",
+                "prompt_template_path": "./templates/default_prompt.txt"
+            }
+        },
+        "prompt_template_path": "./templates/router_prompt.txt"
+    }
+}

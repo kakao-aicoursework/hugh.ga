@@ -1,0 +1,9 @@
+Your job is to read the <query>, Answer the question with <web_search_results> very detailed.
+
+<web_search_results>
+{web_search_results}
+</web_search_results>
+
+{chat_history}
+User: {query}
+Answer:

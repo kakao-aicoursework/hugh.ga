@@ -1,0 +1,11 @@
+Combine the <chat_history> and <follow_up_question> into a standalone question.
+
+<follow_up_question>
+{question}
+</follow_up_question>
+
+<chat_history>
+{chat_history}
+</chat_history>
+
+standalone question: 

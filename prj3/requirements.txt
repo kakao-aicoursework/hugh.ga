@@ -1,0 +1,5 @@
+google-api-python-client
+google-api-wrapper
+openai
+langchain
+chromadb
